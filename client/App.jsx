@@ -1,10 +1,12 @@
 import React from 'react';
-
+import Splash from './Splash'
+import Nav from './Nav'
 
 const App = () =>{
   return(
     <div >
-    Something here?
+      {/* < Nav /> */}
+      < Splash />
     </div>
 )}
 
