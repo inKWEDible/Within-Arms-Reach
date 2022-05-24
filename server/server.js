@@ -8,6 +8,10 @@ app.get('/', (req, res) => {
   res.status(200).sendFile('./client/index.html');
 });
 
+app.get('/login', (req, res) => {
+  res.status(200).sendFile('./client/index.html');
+});
+
 app.listen(port, (req, res) => {
   console.log(`listening on ${port}`);
 });
