@@ -36,21 +36,9 @@ app.get('/google/oauth',
   }
 );
 
-app.use('*', 
-    (req, res) => {
-        return res.status(404).send();
-});
-
-app.use((err, req, res, next) => {
-  const defaultErr = {
-      log: 'Express error handler caught unknown middleware error.',
-      status: 400,
-      message: { err: 'An error has occurred' }
-  };
-  const errorObj = Object.assign({}, defaultErr, err);
-  console.log(errorObj.log);
-  return res.status(400).json(errorObj.message);
-});
+app.get('/users', controllers.getUsers, (req, res) => {
+  res.status(200).json(res.locals.allUsers); 
+})
 
 app.get('/items', controllers.allItems, (req, res) => {
   res.status(200).json(res.locals.allItems); 
