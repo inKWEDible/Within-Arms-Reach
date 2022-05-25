@@ -81,8 +81,13 @@ app.patch('/items',
   res.status(202).json(res.locals.traded); 
 })
 
+app.use('*', 
+    (req, res) => {
+        return res.status(404).send();
+});
 
 app.use((req, res) => res.status(404).send('Looks like you\'re doomed to code alone forever'));
+
 
 app.use((err, req, res, next) => {
   const defaultError = {
