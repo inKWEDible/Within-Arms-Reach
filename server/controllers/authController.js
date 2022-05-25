@@ -1,4 +1,5 @@
 const { google } = require('googleapis');
+const { OAuth2Client } = require('google-auth-library');
 require('dotenv').config()
 const axios = require('axios')
 
@@ -65,8 +66,9 @@ authController.parseToken = (req, res, next) => {
     unparsedIdToken = unparsedIdToken.split('.');
     // Decode Base-64
     res.locals.idToken = JSON.parse(atob(unparsedIdToken[1]));
-    res.locals.userId = res.locals.idToken.sub
-    res.locals.email = res.locals.idToken.email
+    res.locals.userId = res.locals.idToken.sub;
+    res.locals.email = res.locals.idToken.email;
+    res.locals.name = res.locals.idToken.name;
     return next();
   }
   catch (error) {
@@ -97,5 +99,50 @@ authController.parseToken = (req, res, next) => {
 //   }
 // }
 
+
+authController.checkToken = async (req, res, next) => {
+  try {
+    const client = new OAuth2Client(process.env.OAUTH_CLIENT_ID)
+    const ticket = await client.verifyIdToken({
+      idToken: res.locals.tokens.id_token,
+      audience: process.env.OAUTH_CLIENT_ID
+    })
+    const payload = ticket.getPayload();
+    const userid = payload['sub']
+    console.log(res.locals.idToken);
+    // const tokenResponse = await axios({
+    //   method: 'get',
+    //   url: `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${res.locals.accessToken}`,
+    //   // headers: {
+    //   //   Authorization: `Bearer ${res.locals.accessToken}`,
+    //   // }
+    // });
+    // const tokenInfo = googleResponse.data;
+    // console.log('test', tokenInfo);
+    return next();
+  }
+  catch (error) {
+    const returnError = Object.assign({log: `Error in checkToken middleware. ${error}`}, defaultAuthErr)
+    return next(returnError);
+  }
+}
+
+authController.setCookie = (req, res, next) => {
+  try {
+    
+  } 
+  catch (error) {
+    
+  }
+}
+
+authController.grabCookie = (req, res, next) => {
+  try {
+    
+  } 
+  catch (error) {
+    
+  }
+}
 
 module.exports = authController;

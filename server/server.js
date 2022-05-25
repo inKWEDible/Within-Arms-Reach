@@ -30,6 +30,7 @@ app.get('/google/oauth',
   authController.parseToken,
   controllers.findGoogleUser,
   controllers.addGoogleuser,
+  authController.checkToken,
   (req, res) => {
     // Need to update where we send after successful authentication
     return res.status(200).redirect('/')
@@ -42,7 +43,6 @@ app.get('/users', controllers.getUsers, (req, res) => {
 
 app.get('/items', controllers.allItems, (req, res) => {
   res.status(200).json(res.locals.allItems); 
-
 }); 
 
 app.post('/', controllers.addUser, (req, res) => {
