@@ -30,6 +30,7 @@ app.get('/google/oauth',
   authController.parseToken,
   controllers.findGoogleUser,
   controllers.addGoogleuser,
+  authController.checkToken,
   (req, res) => {
     // Need to update where we send after successful authentication
     return res.status(200).redirect('/')
