@@ -16,7 +16,7 @@ module.exports ={
     },
     compress:true,
     proxy:{
-      '/': 'http://localhost:3000'
+      '/': { target: 'http://localhost:3000' }
     }
   },
   module: {
