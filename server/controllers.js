@@ -1,6 +1,9 @@
 const db = require('./models.js'); 
 const controllers = {}; 
 
+
+// ***** Add UUID instead of auto increment so that we can add Google user ids
+// ***** We should add a check that email is unique. name maybe not
 controllers.addUser = async (req, res, next) => {
     console.log('inside of addUser middleware'); 
     try {
@@ -21,6 +24,41 @@ controllers.addUser = async (req, res, next) => {
         return next(err); 
     };
 };
+
+controllers.findGoogleUser = async (req, res, next) => {
+    try {
+        const query = `SELECT id FROM UserTable WHERE id = $1;`;
+        const params = [res.locals.userId]
+        const findGoogleUserQuery = await db.query(query, params);
+        if (findGoogleUserQuery.rows.length > 0) {
+            res.locals.userExists = true;
+        }
+        return next();
+    } 
+    catch (error) {
+        const returnError = {
+            log: `Error in findGoogleUser middleware. ${error}`, 
+        }
+        return next(returnError);    
+    }
+}
+
+controllers.addGoogleuser = async (req, res, next) => {
+    try {
+        if (res.locals.userExists === true) return next()
+        const query = `INSERT INTO UserTable (id, name, email) VALUES ($1, $2, $3) RETURNING id, name, email;`;
+        const params = [res.locals.userId, res.locals.name, res.locals.email];
+        const result = await db.query(query, params); 
+        res.locals.newUser = result; 
+        return next(); 
+    } 
+    catch (error) {
+        const returnError = {
+            log: `Error in addGoogleUser middleware. ${error}`, 
+        }
+        return next(returnError);    
+    }
+}
 
 controllers.deleteUser = async (req, res, next) => {
     console.log('inside of deleteUser middleware'); 
