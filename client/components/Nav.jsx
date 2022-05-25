@@ -5,6 +5,7 @@ const Nav = () => {
     <div>
       <button id='profile'>Profile</button>
       <button id='newItem'>Add New Item</button>
+      <button id='signOut'>Sign Out</button>
     </div>
   )
 };
