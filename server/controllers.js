@@ -95,7 +95,8 @@ controllers.allItems = async (req, res, next) => {
 
 controllers.addItem = async (req, res, next) => {
     try {
-        const {name, description, userId, available, photo } = req.body; 
+        const {name, description, available, photo } = req.body; 
+        const userId = res.locals.userId;
         const postItemQuery = `INSERT INTO items (name, description, userId, available, photo) VALUES ($1, $2, $3, $4, $5);`
         const params = [name, description, userId, available, photo]; 
         const result = await db.query(postItemQuery, params); 

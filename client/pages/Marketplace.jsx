@@ -4,6 +4,16 @@ import PostingButton from '../components/postingButton'
 
 const Marketplace = () => {
   const [itemsMarket, setMarket] = useState([])
+
+  //function to proposeTrade
+  const proposeTrade = async() => {
+    try {
+      
+    } catch (error) {
+      
+    }
+  }
+
   const getMarketplace = async () => {
     try {
       const response = await fetch('/items')
@@ -19,6 +29,7 @@ const Marketplace = () => {
               <li>Photo: {jsonResponse[i].photo}</li>
               <li>Name: {jsonResponse[i].name}</li>
               <li>Description: {jsonResponse[i].description}</li>
+              <li><button>Propose Trade</button></li>
             </ul>
           </div>
         )
@@ -36,9 +47,11 @@ const Marketplace = () => {
 
   return(
     <>
+    <div>
       <h3>Marketplace items here</h3>
         <PostingButton />
       {itemsMarket}
+    </div>
     </>
   )
 }

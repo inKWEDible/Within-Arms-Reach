@@ -27,12 +27,21 @@ function Modal({ open, onClose }) {
   if(!open) return null;
 
   const makePost = async() =>{
+    const body = {
+      name: document.getElementById('itemName').value,
+      description: document.getElementById('itemDes').value,
+      available: true,
+      photo: null,
+    }
     try {
       const response = await fetch('/items', {
         method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(body),
       })
+      onClose()
     } catch (error) {
-      
+      console.log(error);
     }
   }
    
@@ -42,13 +51,13 @@ function Modal({ open, onClose }) {
       <div style={MODAL_STYLES}>
         <button onClick={onClose}>Close</button>
         <div class='newItem'>
-            <div id='itemName'>
+            <div>
               <label>New Item:</label>
-              <input type="text" placeholder="Item Name"></input>
+              <input id='itemName' type="text" placeholder="Item Name"></input>
             </div>
-            <div id='itemDes'>
+            <div>
               <label>Description:</label>
-              <textarea placeholder="Description" cols="35" wrap="soft"></textarea>
+              <textarea id='itemDes' placeholder="Description" cols="35" wrap="soft"></textarea>
             </div>
             <div>
               <button onClick={onClose}>Cancel</button>
