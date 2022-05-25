@@ -1,12 +1,53 @@
 const express = require('express');
-const path = require('path')
+const path = require('path');
 const port = 3000;
+const controllers = require('./controllers');
 
 const app = express();
+app.use(express.json()); 
 
 app.get('/', (req, res) => {
   res.status(200).sendFile('./client/index.html');
 });
+
+app.get('/items', controllers.allItems, (req, res) => {
+  res.status(200).json(res.locals.allItems); 
+
+}); 
+
+app.post('/', controllers.addUser, (req, res) => {
+  console.log('user post request'); 
+  res.status(201).json(res.locals.newUser); 
+}); 
+
+app.post('/items', controllers.addItem, (req, res) => {
+  console.log('item post request'); 
+  res.status(201).json(res.locals.addedItem); 
+}); 
+
+app.post('/trade', controllers.proposeTrade, (req, res) => {
+  console.log('item trade proposal'); 
+  res.status(201).json(res.locals.newTrade); 
+});
+
+app.patch('/items', controllers.acceptTrade, (req, res) => {
+  console.log('item trade accepted'); 
+  res.status(202).json(res.locals.traded); 
+})
+
+
+app.use((req, res) => res.status(404).send('Looks like you\'re doomed to code alone forever'));
+
+app.use((err, req, res, next) => {
+  const defaultError = {
+    log: 'error in middleware', 
+    status: 500, 
+    message: {err: 'Error'}
+  }; 
+  const errorObj = Object.assign({}, defaultError, err); 
+  return res.status(errorObj.status).json(errorObj.message); 
+})
+
 
 app.listen(port, (req, res) => {
   console.log(`listening on ${port}`);
