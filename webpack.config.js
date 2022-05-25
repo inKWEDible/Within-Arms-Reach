@@ -15,9 +15,9 @@ module.exports ={
       publicPath: '/'
     },
     compress:true,
-    // proxy:{
-    //   '/': { target: 'http://localhost:3000' }
-    // }
+    proxy:{
+      '/': { target: 'http://localhost:3000' }
+    }
   },
   module: {
     rules: [{

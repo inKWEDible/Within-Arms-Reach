@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 
 const postingButton = () => {
   //state to manage modal view(whether it shows or not)
@@ -6,7 +8,7 @@ const postingButton = () => {
 
   //functions to show/close modal when clicked
   const handleShow = () => setShow(true)
-  const handleClose = () => setClose(false)
+  const handleClose = () => setShow(false)
   //makes a post request to the db to put in information
 
 
@@ -23,7 +25,7 @@ const postingButton = () => {
           </Form> 
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleClose}>Close</Button>
+          <button onClick={handleClose}>Close</button>
         </Modal.Footer>
       </Modal>
     </div>

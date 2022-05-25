@@ -1,16 +1,50 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PostingButton from '../components/postingButton'
 
 const Marketplace = () => {
-
-  //make a call to the backend for all the items in the Marketplace
+  const [itemsMarket, setMarket] = useState([])
   const getMarketplace = async () => {
     try {
       const response = await fetch('/items')
+      console.log('THIS IS THE RESPONSE FROM FETCHING FROM DB', response);
       const jsonResponse = await response.json();
+      console.log('jsonresponse', jsonResponse)
 
-    //create an array of renders components
-    const itemsMarket = []
+      const newMarket = []
+      for(let i = 0; i < jsonResponse.length; i++){
+        newMarket.push(
+          <div >
+            <ul>
+              <li>Photo: {jsonResponse[i].photo}</li>
+              <li>Name: {jsonResponse[i].name}</li>
+              <li>Description: {jsonResponse[i].description}</li>
+            </ul>
+          </div>
+        )
+      }
+      setMarket(newMarket);
+    } 
+    catch (error) {
+      console.log(error.message)
+    }
+  }
+  console.log('THIS IS ITEMSMARKET', itemsMarket)
+  useEffect(() => {
+    getMarketplace();
+  },[]);
+
+  return(
+    <>
+      <h3>Marketplace items here</h3>
+        <PostingButton />
+      {itemsMarket}
+    </>
+  )
+}
+
+export default Marketplace;
+
+
     //loop through the response from backend to render container components to be displayed
 
   //   [
@@ -27,34 +61,3 @@ const Marketplace = () => {
   //         "photo": null
   //     }
   // ]
-
-    for(let i = 0; i < jsonResponse.length; i++){
-      itemsMarket.push(
-        <div >
-          <ul>
-            <li>Name: {jsonResponse.photo}</li>
-            <li>Name: {jsonResponse.name}</li>
-            <li>Name: {jsonResponse.description}</li>
-          </ul>
-        </div>
-      )
-    }
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
-  useEffect(() => {
-    getMarketplace();
-  },[]);
-
-  return(
-    <>
-      <h3>Marketplace items here</h3>
-        <PostingButton />
-      {itemsMarket}
-    </>
-  )
-}
-
-export default Marketplace;
