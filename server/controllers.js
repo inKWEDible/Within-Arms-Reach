@@ -4,12 +4,30 @@ const controllers = {};
 
 // ***** Add UUID instead of auto increment so that we can add Google user ids
 // ***** We should add a check that email is unique. name maybe not
+
+controllers.getUsers = async (req, res, next) => {
+    try {
+        const getUsersQuery = 'SELECT * FROM UserTable'; 
+        const result = await db.query(getUsersQuery); 
+        res.locals.allUsers = result.rows; 
+        return next(); 
+    } catch (error) {
+        const err = {
+            log: 'error in controller.getUsers middleware function', 
+            status: 500, 
+            message: {error: 'there was a problem getting users'}
+        }; 
+        return next(err); 
+    }
+}
+
 controllers.addUser = async (req, res, next) => {
     console.log('inside of addUser middleware'); 
     try {
-        const { name, email, password } = req.body; 
-        const addUserQuery = `INSERT INTO UserTable (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email, password;`
-        const params = [name, email, password]; 
+        console.log(req.body); 
+        const { id, name, email, password } = req.body; 
+        const addUserQuery = `INSERT INTO UserTable (id, name, email, password) VALUES ($1, $2, $3, $4) RETURNING id, name, email, password;`
+        const params = [id, name, email, password]; 
         const result = await db.query(addUserQuery, params); 
         res.locals.newUser = result; 
         return next(); 
@@ -145,6 +163,24 @@ controllers.acceptTrade = async (req, res, next) => {
         }; 
       return next(err); 
     }; 
+}; 
+
+controllers.getIncomingTrades = async (req, res, next) => {
+    try{
+        const { recipient } = req.body; 
+        const incomingTradesQuery = 'SELECT * FROM tradeRequests WHERE recipient = $1;'; 
+        const params = [ recipient ]; 
+        const result = db.query(incomingTradesQuery, params); 
+        res.locals.incoming = result.rows; 
+        return next(); 
+    } catch (error) {
+        const err = {
+            log: 'error in controller.getIncomingTrades middleware function', 
+            status: 500, 
+            message: {error: 'there was a problem getting incoming trades'}
+        }; 
+      return next(err); 
+    };
 }; 
 
 
