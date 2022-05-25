@@ -7,12 +7,10 @@ const controllers = {};
 controllers.addUser = async (req, res, next) => {
     console.log('inside of addUser middleware'); 
     try {
-        console.log(req.body); 
         const { name, email, password } = req.body; 
         const addUserQuery = `INSERT INTO UserTable (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email, password;`
         const params = [name, email, password]; 
         const result = await db.query(addUserQuery, params); 
-        console.log(result); 
         res.locals.newUser = result; 
         return next(); 
     } catch (error) {
@@ -83,7 +81,6 @@ controllers.allItems = async (req, res, next) => {
   try {
     const allItemsQuery = 'SELECT itemKey, name, description, userID, photo FROM items WHERE available = true;'
     const result = await db.query(allItemsQuery);
-    console.log(result);  
     res.locals.allItems = result.rows; 
     return next(); 
   } catch (error) {
@@ -102,7 +99,6 @@ controllers.addItem = async (req, res, next) => {
         const postItemQuery = `INSERT INTO items (name, description, userId, available, photo) VALUES ($1, $2, $3, $4, $5);`
         const params = [name, description, userId, available, photo]; 
         const result = await db.query(postItemQuery, params); 
-        console.log(result); 
         res.locals.addedItem = result; 
         return next(); 
     } catch (error) {
