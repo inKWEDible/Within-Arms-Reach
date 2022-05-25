@@ -45,6 +45,10 @@ app.get('/items', controllers.allItems, (req, res) => {
   res.status(200).json(res.locals.allItems); 
 }); 
 
+app.get('/trade', controllers.getIncomingTrades, (req, res) => {
+  res.status(200).json(res.locals.incomingTrades); 
+});
+
 app.post('/', controllers.addUser, (req, res) => {
   console.log('user post request'); 
   res.status(201).json(res.locals.newUser); 

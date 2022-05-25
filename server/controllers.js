@@ -168,5 +168,23 @@ controllers.acceptTrade = async (req, res, next) => {
     }; 
 }; 
 
+controllers.getIncomingTrades = async (req, res, next) => {
+    try{
+        const { recipient } = req.body; 
+        const incomingTradesQuery = 'SELECT * FROM tradeRequests WHERE recipient = $1;'; 
+        const params = [ recipient ]; 
+        const result = db.query(incomingTradesQuery, params); 
+        res.locals.incoming = result.rows; 
+        return next(); 
+    } catch (error) {
+        const err = {
+            log: 'error in controller.getIncomingTrades middleware function', 
+            status: 500, 
+            message: {error: 'there was a problem getting incoming trades'}
+        }; 
+      return next(err); 
+    };
+}; 
+
 
 module.exports = controllers; 
