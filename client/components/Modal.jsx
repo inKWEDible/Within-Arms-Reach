@@ -1,6 +1,9 @@
 import React from 'react'
+import ReactDom from 'react-dom';
 
 const MODAL_STYLES = {
+  display: 'flex',
+  flexDirection: 'column',
   position: 'fixed',
   top: '50%',
   left: '50%',
@@ -22,13 +25,36 @@ const OVERLAY_STYLES = {
 
 function Modal({ open, onClose }) {
   if(!open) return null;
+
+  const makePost = async() =>{
+    try {
+      const response = await fetch('/items', {
+        method: 'POST',
+      })
+    } catch (error) {
+      
+    }
+  }
    
   return (
     <>
     <div style={OVERLAY_STYLES}/>
       <div style={MODAL_STYLES}>
-        <button onClick={onClose}>Close Modal</button>
-        MODAL TEXT HERE
+        <button onClick={onClose}>Close</button>
+        <div class='newItem'>
+            <div id='itemName'>
+              <label>New Item:</label>
+              <input type="text" placeholder="Item Name"></input>
+            </div>
+            <div id='itemDes'>
+              <label>Description:</label>
+              <textarea placeholder="Description" cols="35" wrap="soft"></textarea>
+            </div>
+            <div>
+              <button onClick={onClose}>Cancel</button>
+              <button onClick={makePost}>Post Item</button>
+            </div>
+        </div>
       </div>
     </>
   )
