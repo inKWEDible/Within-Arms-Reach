@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/server.js",
-    "dev": "NODE_ENV=development npx webpack serve --open",
+    "dev": "NODE_ENV=development nodemon ./server/server.js & NODE_ENV=development npx webpack serve --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

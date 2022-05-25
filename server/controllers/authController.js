@@ -1,5 +1,6 @@
 const { google } = require('googleapis');
 require('dotenv').config()
+const axios = require('axios')
 
 const authController = {};
 const defaultAuthErr = {
@@ -44,9 +45,8 @@ authController.getAuthUrl = (req, res, next) => {
 
 authController.getToken = async (req, res, next) => {
   try {
-    const { code } = req.params;
-    //Do we at this point still have res locals if we are redirected
-    const { error } = req.params;
+    const { code } = req.query;
+    const { error } = req.query;
     if (error) throw new Error(error);
     const { tokens } = await res.locals.client.getToken(code);
     res.locals.tokens = tokens;
@@ -59,33 +59,43 @@ authController.getToken = async (req, res, next) => {
 }
 
 authController.parseToken = (req, res, next) => {
-  res.locals.accessToken = res.locals.tokens.access_token;
-  let unparsedIdToken = res.locals.tokens.id_token;
-  unparsedIdToken = unparsedIdToken.split('.');
-  // Decode Base-64
-  res.locals.idToken = unparsedIDToken[1].atob();
-  res.locals.userId = res.locals.idToken.user_id
-  res.locals.email = res.locals.idToken.email
-  return next();
-}
-
-authController.getUserInfo = async (req, res, next) => {
   try {
-    const googleResponse = await axios({
-      method: 'get',
-      url: 'https://www.googleapis.com/oauth2/v3/userinfo',
-      headers: {
-        Authorization: `Bearer ${res.locals.accessToken}`,
-      }
-    });
-    const googleUser = googleResponse.data;
-    res.locals.name = googleUser.name;
+    res.locals.accessToken = res.locals.tokens.access_token;
+    let unparsedIdToken = res.locals.tokens.id_token;
+    unparsedIdToken = unparsedIdToken.split('.');
+    // Decode Base-64
+    res.locals.idToken = JSON.parse(atob(unparsedIdToken[1]));
+    res.locals.userId = res.locals.idToken.sub
+    res.locals.email = res.locals.idToken.email
+    return next();
   }
   catch (error) {
-    const returnError = Object.assign({log: `Error in getUserInfo middleware. ${error}`}, defaultAuthErr)
+    const returnError = Object.assign({log: `Error in parseToken middleware. ${error}`}, defaultAuthErr)
     return next(returnError);
   }
 }
+
+// Unnecessary Google API request that gets the same info present on the ID_Token
+
+// authController.getUserInfo = async (req, res, next) => {
+//   try {
+//     const googleResponse = await axios({
+//       method: 'get',
+//       url: 'https://www.googleapis.com/oauth2/v3/userinfo',
+//       headers: {
+//         Authorization: `Bearer ${res.locals.accessToken}`,
+//       }
+//     });
+//     const googleUser = googleResponse.data;
+//     console.log('test', googleUser);
+//     res.locals.name = googleUser.name;
+//     return next();
+//   }
+//   catch (error) {
+//     const returnError = Object.assign({log: `Error in getUserInfo middleware. ${error}`}, defaultAuthErr)
+//     return next(returnError);
+//   }
+// }
 
 
 module.exports = authController;
