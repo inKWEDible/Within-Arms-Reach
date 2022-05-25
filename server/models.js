@@ -17,24 +17,25 @@ module.exports = {
 
 
 // CREATE TABLE UserTable (
-//   id SERIAL NOT NULL PRIMARY KEY, 
-//   name VARCHAR(255) NOT NULL, 
-//   email VARCHAR(255) NOT NULL, 
-//   password VARCHAR(255) NOT NULL
+//   id VARCHAR NOT NULL UNIQUE, 
+//   name VARCHAR NOT NULL, 
+//   email VARCHAR NOT NULL, 
+//   password VARCHAR
 // );
 
 // CREATE TABLE Items (
 //     itemKey SERIAL NOT NULL PRIMARY KEY, 
 //     name VARCHAR(255) NOT NULL,
-//     desciption VARCHAR(255) NOT NULL, 
-//     userId INT NOT NULL, 
+//     description VARCHAR(255) NOT NULL, 
+//     userId VARCHAR NOT NULL, 
 //     available BOOLEAN NOT NULL, 
-//     photo VARCHAR
+//     photo VARCHAR, 
+//     FOREIGN KEY (userId) REFERENCES userTable(id)
 //   ); 
 
 // CREATE TABLE tradeRequests (
-//     sender INT NOT NULL, 
-//     recipient INT NOT NULL, 
+//     sender VARCHAR NOT NULL, 
+//     recipient VARCHAR NOT NULL, 
 //     itemId INT NOT NULL,
 //     FOREIGN KEY (sender) REFERENCES userTable(id), 
 //     FOREIGN KEY (recipient) REFERENCES userTable(id),

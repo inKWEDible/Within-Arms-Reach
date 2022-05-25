@@ -37,10 +37,17 @@ app.get('/google/oauth',
   }
 );
 
+app.get('/users', controllers.getUsers, (req, res) => {
+  res.status(200).json(res.locals.allUsers); 
+})
+
 app.get('/items', controllers.allItems, (req, res) => {
   res.status(200).json(res.locals.allItems); 
-
 }); 
+
+app.get('/trade', controllers.getIncomingTrades, (req, res) => {
+  res.status(200).json(res.locals.incomingTrades); 
+});
 
 app.post('/', controllers.addUser, (req, res) => {
   console.log('user post request'); 
