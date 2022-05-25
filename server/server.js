@@ -12,9 +12,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  return res.status(200).sendFile('./client/index.html');
-});
 
 app.get('/signup/googleOAuth', 
   authController.createClient,
@@ -45,8 +42,20 @@ app.get('/items', controllers.allItems, (req, res) => {
   res.status(200).json(res.locals.allItems); 
 }); 
 
+app.post('/allMyItems', controllers.allMyItems, (req, res) => {
+  res.status(200).json(res.locals.allMyItems);
+}); 
+
 app.get('/trade', controllers.getIncomingTrades, (req, res) => {
   res.status(200).json(res.locals.incomingTrades); 
+});
+
+app.post('/email', controllers.getEmail, (req, res) => {
+  res.status(200).json(res.locals.email); 
+});
+
+app.get('/', (req, res) => {
+  return res.status(200).sendFile('./client/index.html');
 });
 
 app.post('/', controllers.addUser, (req, res) => {

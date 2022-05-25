@@ -7,9 +7,16 @@ const MyItems = () => {
   const getMyItems = async () => {
     try {
       //Specific endpoint for myitems? or just different query
-      const response = await fetch('/items')
+      const body = {userId: '113909874562736516199'}; 
+      const response = await fetch('/allMyItems', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
       const jsonResponse = await response.json();
-      console.log('jsonresponseMyItems', jsonResponse)
+      // console.log('jsonresponseMyItems', jsonResponse)
       const allMyItems = [];
       for (let i = 0; i < jsonResponse.length; i++) {
         allMyItems.push(
@@ -40,10 +47,10 @@ const MyItems = () => {
   }
 
   return (
-    <>
+    <div className='myItems-div'>
     My Items
     {items}
-    </>
+    </div>
   )
 }
 

@@ -51,6 +51,7 @@ const MyProposals = () => {
         // render a "trade accepted" status?
       }
     })
+    .catch(err => {console.log(err)})
   }
 
   // Reject offer fx invoked when "reject" button is clicked
@@ -66,10 +67,10 @@ const MyProposals = () => {
   }, [])
 
   return (
-    <>
+    <div className='myProposals-div'>
     My Proposals
     {proposals}
-    </>
+    </div>
   )
 }
 
