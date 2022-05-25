@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PostingButton from '../components/postingButton'
+import PostingButton2 from '../components/postingButton2'
 
 const Marketplace = () => {
   const [itemsMarket, setMarket] = useState([])
@@ -36,7 +37,7 @@ const Marketplace = () => {
   return(
     <>
       <h3>Marketplace items here</h3>
-        <PostingButton />
+        <PostingButton2 />
       {itemsMarket}
     </>
   )
