@@ -30,7 +30,7 @@ app.get('/google/oauth',
   authController.parseToken,
   controllers.findGoogleUser,
   controllers.addGoogleuser,
-  authController.checkToken,
+  authController.setCookie,
   (req, res) => {
     // Need to update where we send after successful authentication
     return res.status(200).redirect('/')
@@ -54,17 +54,29 @@ app.post('/', controllers.addUser, (req, res) => {
   res.status(201).json(res.locals.newUser); 
 }); 
 
-app.post('/items', controllers.addItem, (req, res) => {
+app.post('/items', 
+  authController.grabCookie,
+  authController.checkToken,
+  authController.parseCookie,
+  controllers.addItem, (req, res) => {
   console.log('item post request'); 
   res.status(201).json(res.locals.addedItem); 
 }); 
 
-app.post('/trade', controllers.proposeTrade, (req, res) => {
+app.post('/trade', 
+  authController.grabCookie,
+  authController.checkToken,
+  authController.parseCookie,
+  controllers.proposeTrade, (req, res) => {
   console.log('item trade proposal'); 
   res.status(201).json(res.locals.newTrade); 
 });
 
-app.patch('/items', controllers.acceptTrade, (req, res) => {
+app.patch('/items', 
+  authController.grabCookie,
+  authController.checkToken,
+  authController.parseCookie,
+  controllers.acceptTrade, (req, res) => {
   console.log('item trade accepted'); 
   res.status(202).json(res.locals.traded); 
 })

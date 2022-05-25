@@ -104,21 +104,11 @@ authController.checkToken = async (req, res, next) => {
   try {
     const client = new OAuth2Client(process.env.OAUTH_CLIENT_ID)
     const ticket = await client.verifyIdToken({
-      idToken: res.locals.tokens.id_token,
+      idToken: res.locals.idToken,
       audience: process.env.OAUTH_CLIENT_ID
     })
     const payload = ticket.getPayload();
     const userid = payload['sub']
-    console.log(res.locals.idToken);
-    // const tokenResponse = await axios({
-    //   method: 'get',
-    //   url: `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${res.locals.accessToken}`,
-    //   // headers: {
-    //   //   Authorization: `Bearer ${res.locals.accessToken}`,
-    //   // }
-    // });
-    // const tokenInfo = googleResponse.data;
-    // console.log('test', tokenInfo);
     return next();
   }
   catch (error) {
@@ -129,19 +119,47 @@ authController.checkToken = async (req, res, next) => {
 
 authController.setCookie = (req, res, next) => {
   try {
-    
+    res.cookie('idToken', res.locals.tokens.id_token, {
+      httpOnly: true
+    })
+    return next()
   } 
   catch (error) {
-    
+    const returnError = Object.assign({log: `Error in setCookie middleware. ${error}`}, defaultAuthErr)
+    return next(returnError);
   }
 }
 
 authController.grabCookie = (req, res, next) => {
   try {
-    
+    const { idToken } = req.cookies;
+    if (idToken === undefined) {
+      throw new Error('No token returned from Client. User must re-authenticate.')
+    }
+    res.locals.idToken = idToken;
+    return next()
   } 
   catch (error) {
-    
+    const returnError = Object.assign({log: `Error in setCookie middleware. ${error}`, status: 401}, defaultAuthErr)
+    return next(returnError);
+  }
+}
+
+authController.parseCookie = (req, res, next) => {
+  try {
+
+    let unparsedIdToken = res.locals.idToken
+    unparsedIdToken = unparsedIdToken.split('.');
+    // Decode Base-64
+    res.locals.idToken = JSON.parse(atob(unparsedIdToken[1]));
+    res.locals.userId = res.locals.idToken.sub;
+    res.locals.email = res.locals.idToken.email;
+    res.locals.name = res.locals.idToken.name;
+    return next();
+  }
+  catch (error) {
+    const returnError = Object.assign({log: `Error in parseToken middleware. ${error}`}, defaultAuthErr)
+    return next(returnError);
   }
 }
 
