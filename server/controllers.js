@@ -111,6 +111,24 @@ controllers.allItems = async (req, res, next) => {
   };
 }; 
 
+controllers.allMyItems = async (req, res, next) => {
+    const { userId } = req.body
+    try {
+      const params = [userId];
+      const allMyItemsQuery = 'SELECT itemKey, name, description, userID, photo FROM items WHERE userID = $1;'
+      const result = await db.query(allMyItemsQuery, params);
+      res.locals.allMyItems = result.rows; 
+      return next(); 
+    } catch (error) {
+          const err = {
+              log: 'error in controller.allItems middleware function', 
+              status: 500, 
+              message: {error: 'there was a problem while retrieving my items'}
+          };
+      return next(err); 
+    };
+  }; 
+
 controllers.addItem = async (req, res, next) => {
     try {
         const {name, description, available, photo } = req.body; 
@@ -184,5 +202,22 @@ controllers.getIncomingTrades = async (req, res, next) => {
     };
 }; 
 
+controllers.getEmail = async (req, res, next) => {
+    try {
+        const { userId } = req.body; 
+        const getUserIdQuery = 'SELECT email FROM userTable WHERE id = $1;'; 
+        const params = [userId]
+        const result = await db.query(getUserIdQuery, params); 
+        res.locals.email = result.rows[0];
+        return next(); 
+    } catch (error) {
+        const err = {
+            log: 'error in controller.getEmail middleware function', 
+            status: 500, 
+            message: {error: 'there was a problem accepting trade'}
+        }; 
+      return next(err); 
+    };
+};
 
 module.exports = controllers; 

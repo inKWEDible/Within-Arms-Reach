@@ -6,12 +6,22 @@ const Marketplace = () => {
   const [itemsMarket, setMarket] = useState([])
 
   //function to proposeTrade
-  const proposeTrade = async() => {
-    try {
-      
-    } catch (error) {
-      
-    }
+  const proposeTrade = async (event) => { 
+    alert('just send them a friggin email: @danteng@gmail.com');
+    // const body = {userId: event.target.name}; 
+    // console.log(body); 
+    // try {   
+    //   const result = await fetch('/email', {
+    //     method: 'POST',
+    //     headers:{'Content-Type': 'application/json'},
+    //     body: JSON.stringify(body)
+    //   });
+    //   console.log(result); 
+    //   //alert('Just send them a friggin email: ' + result); 
+    //   //alert(`Just send them a friggin email: `, result);  
+    // } catch (error) {
+    //   console.log('failed to get email')
+    // }
   }
 
   const getMarketplace = async () => {
@@ -22,14 +32,14 @@ const Marketplace = () => {
       console.log('jsonresponse', jsonResponse)
 
       const newMarket = []
-      for(let i = 0; i < jsonResponse.length; i++){
+      for(let i = 0; i < jsonResponse.length; i++){ 
         newMarket.push(
-          <div >
+          <div id={jsonResponse[i].itemKey}>
             <ul>
               <li>Photo: {jsonResponse[i].photo}</li>
               <li>Name: {jsonResponse[i].name}</li>
               <li>Description: {jsonResponse[i].description}</li>
-              <li><button>Propose Trade</button></li>
+              <li><button name={jsonResponse[i].userid} onClick={proposeTrade}>Propose Trade</button></li>
             </ul>
           </div>
         )
@@ -40,7 +50,7 @@ const Marketplace = () => {
       console.log(error.message)
     }
   }
-  console.log('THIS IS ITEMSMARKET', itemsMarket)
+
   useEffect(() => {
     getMarketplace();
   },[]);
@@ -48,9 +58,11 @@ const Marketplace = () => {
   return(
     <>
     <div>
-      <h3>Marketplace items here</h3>
+      <h3>Within Arms Reach</h3>
         <PostingButton />
-      {itemsMarket}
+        <div className="marketplace">
+          {itemsMarket}
+        </div>
     </div>
     </>
   )
